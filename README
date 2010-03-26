@@ -1,0 +1,31 @@
+Cheepnis is a small library that makes it easy for Heroku-based applications to spin up worker processes when needed, and shuts them down when they are finished.
+
+Rationale:  Keeping a worker going continuously costs around $36/month at the current rates. This is reasonable for commercial applications but for hobbyist and free sites it is quite expensive.  If all you are doing is sending mail a few times a day, this would keep the cost down to the $1-5 range.   
+
+Install:  
+Assuming you are already running your app on Heroku:
+
+Put cheepnis.rb in your applications lib/ directory.
+
+Use the Heroku gem by adding this to your config/environment.rb file
+  config.gem 'heroku'
+
+Set the Heroku config variables so your app can modify its own settings:
+
+heroku config:add HEROKU_USER='you@somewhere.com'
+heroku config:add HEROKU_PASSWORD='yourpassword'
+
+Use the credentials that you use to log into the Heroku website.  
+
+Use:
+Call Cheepnis.enqueue(obj) in place of Delayed::Job.enqueue(obj)
+
+Reference:
+http://docs.heroku.com/delayed-job
+
+Caveats:
+
+It's within the realm of possibility that something could go wrong with the machinery that shuts the worker down after all jobs are processed; which could result in more charges to your account.
+
+It's also possible that the Heroku people may take a dim view of this kind of usage, although it's not doing anything except using their API.  Personally I think they should make it easier/cheaper to do this kind of thing for low-volume applications, but it's their business.  
+
